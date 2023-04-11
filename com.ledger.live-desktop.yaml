@@ -1,0 +1,30 @@
+app-id: com.ledger.live-desktop
+runtime: org.freedesktop.Platform
+runtime-version: '22.08'
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '22.08'
+command: dist/linux-unpacked/ledger-live-desktop
+separate-locales: false
+finish-args:
+  - --device=all
+  - --share=ipc
+  - --share=network
+  - --socket=wayland
+  - --socket=fallback-x11
+
+modules:
+  - name: ledger-live-desktop
+    buildsystem: simple
+    build-commands:
+      - pnpm i --filter="ledger-live-desktop..." --filter="ledger-live" --frozen-lockfile --unsafe-perm
+      - pnpm build:lld:deps
+      - pnpm desktop build
+    sources:
+      - type: git
+        url: https://github.com/LedgerHQ/ledger-live
+        tag: "@ledgerhq/live-desktop@2.56.0"
+        commit: ca82358abfcffbbaee5c4471b5b07b63e22ff5e6
+        x-checker-data:
+          type: git
+          tag-pattern: ^@ledgerhq/live-desktop@([\d.]+)$

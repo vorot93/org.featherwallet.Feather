@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.ledger.live-desktop</id>
+  <launchable type="desktop-id">com.ledger.live-desktop</launchable>
+  <name>Ledger Live</name>
+  <developer_name>Ledger</developer_name>
+  <summary>Ledger Live - Desktop</summary>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>MIT</project_license>
+  <url type="homepage">https://ledger.com/ledger-live</url>
+  <description>
+    <p>Ledger Live is a new generation wallet desktop application providing a unique interface to maintain multiple cryptocurrencies for your Ledger Nano S / Blue. Manage your device, create accounts, receive and send cryptoassets, ...and many more.</p>
+  </description>
+  <content_rating type="oars-1.1"/>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/LedgerHQ/ledger-live/develop/apps/ledger-live-desktop/docs/screenshot.png</image>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="2.56.0" date="2023-03-27"/>
+  </releases>
+  <url type="bugtracker">https://github.com/LedgerHQ/ledger-live/issues </url>
+  <url type="help">https://support.ledger.com/hc</url>
+</component>
