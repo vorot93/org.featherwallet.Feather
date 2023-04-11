@@ -2,9 +2,11 @@ app-id: com.ledger.live-desktop
 runtime: org.freedesktop.Platform
 runtime-version: '22.08'
 sdk: org.freedesktop.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.node18
 base: org.electronjs.Electron2.BaseApp
 base-version: '22.08'
-command: dist/linux-unpacked/ledger-live-desktop
+command: run.sh
 separate-locales: false
 finish-args:
   - --device=all
@@ -14,12 +16,36 @@ finish-args:
   - --socket=fallback-x11
 
 modules:
+  - name: pnpm
+    buildsystem: simple
+    build-options:
+      append-path: /usr/lib/sdk/node18/bin
+    build-commands:
+      - npm install -g pnpm
+    sources:
+      - type: git
+        url: https://github.com/pnpm/pnpm
+        tag: v8.2.0
+        commit: 36fae6ffbabcc858780a900cc97bbb82a1793422
+        x-checker-data:
+          type: git
+          tag-pattern: ^v([\d.]+)$
+
   - name: ledger-live-desktop
     buildsystem: simple
+    build-options:
+      env:
+        XDG_CACHE_HOME: /run/build/ledger-live-desktop/flatpak-node/cache
+        npm_config_cache: /run/build/ledger-live-desktop/flatpak-node/npm-cache
+        npm_config_nodedir: /usr/lib/sdk/node18
+        npm_config_offline: 'true'
     build-commands:
-      - pnpm i --filter="ledger-live-desktop..." --filter="ledger-live" --frozen-lockfile --unsafe-perm
+      # - cd /run/build/ledger-live-desktop
+      - pnpm i --filter="ledger-live-desktop..." --filter="ledger-live" --frozen-lockfile --unsafe-perm --offline
       - pnpm build:lld:deps
       - pnpm desktop build
+      - cp -a dist/linux*unpacked /app/main
+      - install -Dm755 -t /app/bin/ ../run.sh
     sources:
       - type: git
         url: https://github.com/LedgerHQ/ledger-live
@@ -28,3 +54,8 @@ modules:
         x-checker-data:
           type: git
           tag-pattern: ^@ledgerhq/live-desktop@([\d.]+)$
+      - generated-sources.json
+      - type: script
+        dest-filename: run.sh
+        commands:
+          - zypak-wrapper.sh /dist/main/ledger-live-desktop "$@"
